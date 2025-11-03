@@ -62,3 +62,7 @@ Route::get('etiquetas/producto/{producto_id}', [EtiquetaController::class, 'getB
 //Resena rutas
 Route::apiResource('resenas',ResenaController::class);
 Route::get('/productos/{id}/resenas', [ResenaController::class, 'getResenasByProducto']);
+
+//mensajeria
+Route::get('/messages/{conversation}', [MessageController::class, 'index']);
+Route::post('/messages', [MessageController::class, 'send']);
