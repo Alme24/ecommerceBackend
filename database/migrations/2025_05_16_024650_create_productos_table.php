@@ -25,6 +25,8 @@ return new class extends Migration
             $table->string('color_producto')->nullable();
             $table->integer('cantDisp_producto');
             $table->decimal('descuento_producto',5,2)->default(0);
+            $table->string('imagen_public_id')->nullable();
+            $table->string('imagen_producto')->nullable();
 
             $table->timestamps();
         });

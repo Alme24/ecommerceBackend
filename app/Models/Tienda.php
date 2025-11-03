@@ -19,7 +19,9 @@ class Tienda extends Model
         'ciudad_tienda',
         'provincia_tienda',
         'lugarEntregas_tienda',
+        'logo_public_id',
         'logo_tienda',
+        'banner_public_id',
         'banner_tienda',
         'calificacion_tienda'
     ];

@@ -19,7 +19,9 @@ class Producto extends Model
         'precio_producto',
         'color_producto',
         'cantDisp_producto',
-        'descuento_producto'
+        'descuento_producto',
+        'imagen_public_id',
+        'imagen_producto'
     ];
 
     public function tienda()

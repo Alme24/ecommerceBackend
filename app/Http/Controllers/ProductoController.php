@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\Producto;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Validation\ValidationException;
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
+
 
 class ProductoController extends Controller
 {
@@ -40,9 +42,18 @@ class ProductoController extends Controller
                 'color_producto' => 'nullable',
                 'cantDisp_producto' => 'required|integer',
                 'descuento_producto' => 'nullable|numeric',
+                'imagen_producto' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
                 'etiquetas' => 'nullable|array',
             ]);
             
+            $imagenUpload=null;
+
+            if ($request->hasFile('imagen_producto')) {
+                $imagenUpload = Cloudinary::upload($request->file('imagen_producto')->getRealPath(),[
+                    'folder' => 'productos'
+                ]);
+            }
+
             $producto = Producto::create([
                 'tienda_id' => $request->tienda_id,
                 'categoria_id' => $request->categoria_id,
@@ -54,6 +65,8 @@ class ProductoController extends Controller
                 'color_producto' => $request->color_producto,
                 'cantDisp_producto' => $request->cantDisp_producto,
                 'descuento_producto' =>$request->descuento_producto,
+                'imagen_public_id' => $imagenUpload?->getPublicId(),
+                'imagen_producto' => $imagenUpload?->getSecurePath(),
             ]);
             $producto->etiquetas()->attach($request->etiquetas);
 
@@ -106,8 +119,20 @@ class ProductoController extends Controller
                 'color_producto' => 'sometimes',
                 'cantDisp_producto' => 'sometimes|integer',
                 'descuento_producto' => 'nullable|numeric',
+                'imagen_producto' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
                 'etiquetas' => 'sometimes|array',
             ]);
+
+            if ($request->hasFile('imagen_producto')) {
+                if($producto->imagen_public_id){
+                    Cloudinary::destroy($producto->imagen_public_id);
+                }
+                $imagenUpload = Cloudinary::upload($request->file('imagen_producto')->getRealPath(),[
+                    'folder'=> 'productos'
+                ]);
+                $producto->imagen_public_id=$imagenoUpload->getPublicId();
+                $producto->imagen_producto=$imagenUpload->getSecurePath();
+            }
             $producto->update($request->all());
             
             if ($request->has('etiquetas')) {
@@ -139,6 +164,9 @@ class ProductoController extends Controller
     {
         try {
             $producto = Producto::findOrFail($id);
+            if ($producto->imagen_producto) {
+                Cloudinary::destroy($producto->imagen_public_id);
+            }
             $producto->etiquetas()->detach();
             $producto->delete();
             return response()->json(['message' => 'Producto eliminado']);

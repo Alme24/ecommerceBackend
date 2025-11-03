@@ -22,9 +22,14 @@ return new class extends Migration
             $table->string('ciudad_tienda',40);
             $table->string('provincia_tienda',40);
             $table->string('lugarEntregas_tienda',50);
-            $table->string('logo_tienda');
-            $table->string('banner_tienda');
-            $table->integer('calificacion_tienda');
+
+            // Campos de imágenes en Cloudinary
+            $table->string('logo_public_id')->nullable();
+            $table->string('logo_tienda')->nullable();
+            $table->string('banner_public_id')->nullable();
+            $table->string('banner_tienda')->nullable();
+
+            $table->integer('calificacion_tienda')->nullable();
             $table->timestamps();
         });
     }

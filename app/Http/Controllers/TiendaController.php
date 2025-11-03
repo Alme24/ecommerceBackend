@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Tienda;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Validation\ValidationException;
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 
 class TiendaController extends Controller
 {
@@ -41,11 +42,28 @@ class TiendaController extends Controller
                 'ciudad_tienda' => 'required|string|max:40',
                 'provincia_tienda' => 'required|string|max:40',
                 'lugarEntregas_tienda' => 'required|string|max:50',
-                'logo_tienda' => 'required|string',
-                'banner_tienda' => 'required|string',
+                'logo_tienda' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+                'banner_tienda' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
                 'calificacion_tienda' => 'nullable|integer',
                 'categorias' => 'array|required', //ej:[1,2,3]
             ]);
+
+            $logoUpload = null;
+            $bannerUpload = null;
+            
+            // Subir logo
+            if ($request->hasFile('logo_tienda')) {
+                $logoUpload = Cloudinary::upload($request->file('logo_tienda')->getRealPath(), [
+                    'folder' => 'tiendas/logos'
+                ]);
+            }
+
+            // Subir banner
+            if ($request->hasFile('banner_tienda')) {
+                $bannerUpload = Cloudinary::upload($request->file('banner_tienda')->getRealPath(), [
+                    'folder' => 'tiendas/banners'
+                ]);
+            }
 
             $tienda = Tienda::create([
                 'usuario_id' => $request->usuario_id,
@@ -57,9 +75,11 @@ class TiendaController extends Controller
                 'ciudad_tienda' => $request->ciudad_tienda,
                 'provincia_tienda' => $request->provincia_tienda,
                 'lugarEntregas_tienda' => $request->lugarEntregas_tienda,
-                'logo_tienda' => $request->logo_tienda,
-                'banner_tienda' => $request->banner_tienda,
-                'calificacion_tienda' => $request->calificacion_tienda,
+                'logo_public_id' => $logoUpload?->getPublicId(),
+                'logo_tienda' => $logoUpload?->getSecurePath(),
+                'banner_public_id' => $bannerUpload?->getPublicId(),
+                'banner_tienda' => $bannerUpload?->getSecurePath(),
+                'calificacion_tienda' => $request->calificacion_tienda ?? 0,
             ]);
 
             $tienda->categorias()->attach($request->categorias);
@@ -110,11 +130,41 @@ class TiendaController extends Controller
                 'ciudad_tienda' => 'sometimes|string|max:40',
                 'provincia_tienda' => 'sometimes|string|max:40',
                 'lugarEntregas_tienda' => 'sometimes|string|max:50',
-                'logo_tienda' => 'sometimes|string',
-                'banner_tienda' => 'sometimes|string',
+                'logo_tienda' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+                'banner_tienda' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
                 'calificacion_tienda' => 'nullable|integer',
-                'categorias'=>'sometimes|array',
+                'categorias' => 'sometimes|array',
             ]);
+            // Si el logo nuevo llega, eliminamos el anterior en Cloudinary
+            if ($request->hasFile('logo_tienda')) {
+                if ($tienda->logo_public_id) {
+                    Cloudinary::destroy($tienda->logo_public_id);
+                }
+
+                $logoUpload = Cloudinary::upload($request->file('logo_tienda')->getRealPath(), [
+                    'folder' => 'tiendas/logos'
+                ]);
+
+                $tienda->logo_public_id = $logoUpload->getPublicId();
+                $tienda->logo_tienda = $logoUpload->getSecurePath();
+            }
+
+            // Si el banner nuevo llega, eliminamos el anterior
+            if ($request->hasFile('banner_tienda')) {
+                if ($tienda->banner_public_id) {
+                    Cloudinary::destroy($tienda->banner_public_id);
+                }
+
+                $bannerUpload = Cloudinary::upload($request->file('banner_tienda')->getRealPath(), [
+                    'folder' => 'tiendas/banners'
+                ]);
+
+                $tienda->banner_public_id = $bannerUpload->getPublicId();
+                $tienda->banner_tienda = $bannerUpload->getSecurePath();
+            }
+
+            // Actualizar datos de texto
+            $tienda->update($request->except(['logo_tienda', 'banner_tienda']));
 
             $tienda->update($request->all());
 
@@ -145,6 +195,13 @@ class TiendaController extends Controller
     {
         try {
             $tienda = Tienda::findOrFail($id);
+            if ($tienda->logo_public_id) {
+                Cloudinary::destroy($tienda->logo_public_id);
+            }
+
+            if ($tienda->banner_public_id) {
+                Cloudinary::destroy($tienda->banner_public_id);
+            }
             $tienda->categorias()->detach();
             $tienda->delete();
             return response()->json(['message' => 'Tienda eliminada']);
