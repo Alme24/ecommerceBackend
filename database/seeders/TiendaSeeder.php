@@ -12,6 +12,6 @@ class TiendaSeeder extends Seeder
      */
     public function run(): void
     {
-        \App\Models\Tienda::factory(3)->create();
+        \App\Models\Tienda::factory(1)->create();
     }
 }

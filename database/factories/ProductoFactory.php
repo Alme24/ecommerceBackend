@@ -29,6 +29,8 @@ class ProductoFactory extends Factory
             'color_producto' => fake()->safeColorName(),
             'cantDisp_producto' => fake()->numberBetween(1, 100),
             'descuento_producto' => fake()->numberBetween(0, 30),
+            'imagen_public_id'=> null,
+            'imagen_producto'=> 'https://placehold.co/600x400',
         ];
     }
 }

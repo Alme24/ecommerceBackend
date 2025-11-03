@@ -27,8 +27,10 @@ class TiendaFactory extends Factory
             'ciudad_tienda' => fake()->city,
             'provincia_tienda' => fake()->state,
             'lugarEntregas_tienda' => fake()->sentence(3),
-            'logo_tienda' => Str::random(10).'.jpg',
-            'banner_tienda' => Str::random(10).'.jpg',
+            'logo_public_id' => null ,
+            'logo_tienda' => 'https://placehold.co/600x400',
+            'banner_public_id' => null,
+            'banner_tienda' => 'https://placehold.co/600x400',
             'calificacion_tienda' => fake()->randomFloat(1, 1, 5),
         ];
     }
