@@ -41,4 +41,9 @@ class Tienda extends Model
         return $this->belongsToMany(Categoria::class, 'categoria_tienda', 'tienda_id', 'categoria_id');
     }
 
+    public function horarios()
+    {
+        return $this->hasMany(HorarioTienda::class);
+    }
+
 }

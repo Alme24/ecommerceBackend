@@ -11,6 +11,10 @@ use App\Http\Controllers\CarritoController;
 use App\Http\Controllers\CategoriaController;
 use App\Http\Controllers\EtiquetaController;
 use App\Http\Controllers\ResenaController;
+use App\Http\Controllers\MessageController;
+use App\Http\Controllers\HorarioTienda;
+
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -66,3 +70,13 @@ Route::get('/productos/{id}/resenas', [ResenaController::class, 'getResenasByPro
 //mensajeria
 Route::get('/messages/{conversation}', [MessageController::class, 'index']);
 Route::post('/messages', [MessageController::class, 'send']);
+
+//Horarios
+Route::prefix('tiendas/{tienda_id}')->group(function () {
+    Route::get('/horarios', [HorarioTiendaController::class, 'index']);
+    Route::post('/horarios', [HorarioTiendaController::class, 'store']);
+});
+
+Route::get('/horarios/{id}', [HorarioTiendaController::class, 'show']);
+Route::put('/horarios/{id}', [HorarioTiendaController::class, 'update']);
+Route::delete('/horarios/{id}', [HorarioTiendaController::class, 'destroy']);
