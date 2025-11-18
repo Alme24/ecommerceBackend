@@ -72,4 +72,21 @@ class HorarioTiendaController extends Controller
         $horario->delete();
         return response()->json(['message' => 'Horario eliminado correctamente']);
     }
+    /** Mostar producto por tienda */
+    public function getHorarioTienda($tiendaId)
+    {
+        try {
+            $horarios = HorarioTienda::where('tienda_id', $tiendaId)->get();
+            if ($horarios->isEmpty()) {
+                return response()->json(['message' => 'No se encontraron horarios para esta tienda.'], 404);
+            }
+
+            return response()->json($horarios);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'message' => 'Error inesperado',
+                'error'=> $e->getMessage(),
+            ],500);
+        }
+    }
 }

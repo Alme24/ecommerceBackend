@@ -12,7 +12,7 @@ use App\Http\Controllers\CategoriaController;
 use App\Http\Controllers\EtiquetaController;
 use App\Http\Controllers\ResenaController;
 use App\Http\Controllers\MessageController;
-use App\Http\Controllers\HorarioTienda;
+use App\Http\Controllers\HorarioTiendaController;
 
 
 /*
@@ -45,13 +45,13 @@ Route::get('tiendas/usuario/{user_id}',[TiendaController::class,'getByUserId']);
 Route::apiResource('productos',ProductoController::class);
 Route::get('productos/categoria/{categoria_id}', [ProductoController::class, 'getByCategoria']);
 Route::get('productos/detalle/{id}',[ProductoController::class,'getProductoDetall']);
+Route::get('/tienda/productos/{tiendaId}',[ProductoController::class, 'getProductosTienda']);
 
 //Pedido rutas
 Route::apiResource('pedidos',PedidoController::class);
 Route::get('/tienda/{tienda_id}/pedidos/{estado_pedido}', [PedidoController::class, 'pedidosEstadoArtesano']);
 Route::get('/usuario/{user_id}/pedidos/{estado_pedido}', [PedidoController::class, 'pedidosEstadoUser']);
 Route::get('/pedidos/carrito/{carrito_id}', [PedidoController::class, 'pedidosPorCarrito']);
-
 
 //Carrito rutas
 Route::apiResource('carritos',CarritoController::class);
@@ -80,3 +80,4 @@ Route::prefix('tiendas/{tienda_id}')->group(function () {
 Route::get('/horarios/{id}', [HorarioTiendaController::class, 'show']);
 Route::put('/horarios/{id}', [HorarioTiendaController::class, 'update']);
 Route::delete('/horarios/{id}', [HorarioTiendaController::class, 'destroy']);
+Route::get('/tienda/horarios/{tiendaId}',[HorarioTiendaController::class, 'getHorarioTienda']);

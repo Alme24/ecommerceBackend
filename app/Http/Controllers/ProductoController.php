@@ -223,4 +223,22 @@ class ProductoController extends Controller
             ],500);
         }
     }
+
+    /** Mostar producto por tienda */
+    public function getProductosTienda($tiendaId)
+    {
+        try {
+            $productos = Producto::where('tienda_id', $tiendaId)->get();
+            if ($productos->isEmpty()) {
+                return response()->json(['message' => 'No se encontraron productos para esta tienda.'], 404);
+            }
+
+            return response()->json($productos);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'message' => 'Error inesperado',
+                'error'=> $e->getMessage(),
+            ],500);
+        }
+    }
 }

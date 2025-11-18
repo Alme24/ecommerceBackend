@@ -14,6 +14,7 @@ use Database\Seeders\EtiquetaSeeder;
 use Database\Seeders\CarritoSeeder;
 use Database\Seeders\PedidoSeeder;
 use Database\Seeders\ResenaSeeder;
+use Database\Seeders\HorarioTiendaSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -61,6 +62,7 @@ class DatabaseSeeder extends Seeder
             CarritoSeeder::class,
             PedidoSeeder::class,
             ResenaSeeder::class,
+            HorarioTiendaSeeder::class,
         ]);
     }
 }
