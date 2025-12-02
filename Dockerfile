@@ -14,7 +14,7 @@ WORKDIR /app
 COPY . .
 
 # Instalar dependencias de Laravel
-RUN composer install --no-dev --optimize-autoloader
+RUN composer install --optimize-autoloader
 
 # Exponer puerto para Railway
 EXPOSE 8080
