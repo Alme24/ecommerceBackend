@@ -20,4 +20,4 @@ RUN composer install --no-dev --optimize-autoloader
 EXPOSE 8080
 
 # Comando final: generar key si no existe y arrancar el servidor
-CMD ["/bin/sh", "-c", "php artisan migrate --force && php artisan serve --host 0.0.0.0 --port 8080"]
+CMD ["/bin/sh", "-c", "php artisan migrate --force && php artisan db:seed --force && php artisan serve --host 0.0.0.0 --port 8080"]
