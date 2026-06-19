@@ -147,6 +147,7 @@ class ResenaController extends Controller
                         'nombre_user' => $pedido->usuario->nombre_user ?? 'No disponible',
                         'apellido_user' => $pedido->usuario->apellido_user ?? 'No disponible',
                         'descripcion_resena' => $resena->descripcion_resena,
+                        'calificacion_resena' => $resena->calificacion_resena,
                         'fecha_resena' => $resena->fecha_resena,
                     ]);
                 }

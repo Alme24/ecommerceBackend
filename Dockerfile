@@ -12,6 +12,7 @@ WORKDIR /app
 
 # Copiar proyecto
 COPY . .
+COPY server.php server.php
 
 # Instalar dependencias de Laravel
 RUN composer install --optimize-autoloader
