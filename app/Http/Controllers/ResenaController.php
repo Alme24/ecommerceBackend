@@ -153,10 +153,6 @@ class ResenaController extends Controller
                 }
             }
 
-            if ($resenas->isEmpty()) {
-                return response()->json(['message' => 'Reseñas no encontradas'], 404);
-            }
-
             return response()->json($resenas->sortByDesc('fecha_resena')->values());
         } catch (ModelNotFoundException $e) {
             return response()->json([
